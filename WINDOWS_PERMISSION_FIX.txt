@@ -1,0 +1,6 @@
+The usage.tmp PermissionError repair is retained in this version.
+Unique atomic temporary files and lock retries replace the shared usage.tmp path.
+Usage saving failures show a warning and do not interrupt chat or code execution.
+For the current interactive console, AI switches and Windows update instructions,
+read UPGRADE_WINDOWS.md. Do not apply the older three-file-only update instructions:
+copy the full backend and upgrade requirements as described in the current guide.
