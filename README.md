@@ -1,6 +1,6 @@
 # CodePilot AI — Interactive Coding Workspace
 
-A Streamlit coding mentor with local Ollama, optional OpenAI/Gemini/Groq APIs,
+A Streamlit coding mentor with OpenAI/Gemini/Groq cloud APIs,
 local knowledge retrieval, and an interactive code console.
 
 ## What's updated
@@ -31,10 +31,7 @@ local account. Set up your AI providers in Settings.
 
 ## AI modes
 
-- Local Ollama on, Cloud AI APIs off: local answer only.
-- Local Ollama off, Cloud AI APIs on: selected cloud answer only.
-- Both on: independent parallel answers from Ollama and your cloud provider.
-- Both off: configuration cannot be saved.
+- Select OpenAI, Gemini or Groq in Settings and enter its API key. All AI answers use the selected cloud provider.
 
 Enter the correct model, URL and API key, then Save Settings and Test Enabled
 Connections. Cloud calls need an accessible API account, available model and quota.

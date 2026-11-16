@@ -44,8 +44,7 @@ class AppTests(unittest.TestCase):
         self.assertEqual(self.app.session_state['usage']['successful_runs'],1)
         self.app.run();self.assertEqual(self.app.session_state['usage']['successful_runs'],1)
     def test_session_only_cloud_key_survives_save_and_request(self):
-        self.page('Settings');self.app.toggle(key='setting_ollama_enabled').set_value(False)
-        self.app.toggle(key='setting_cloud_enabled').set_value(True).run()
+        self.page('Settings')
         self.app.selectbox(key='setting_provider').set_value('Groq').run()
         self.app.text_input(key='setting_groq_key').set_value('test-Groq')
         self.app.checkbox(key='setting_remember_keys').set_value(False)
@@ -57,17 +56,17 @@ class AppTests(unittest.TestCase):
         with patch.object(ai,'_generate_one',return_value='Cloud works') as call:self.app.button(key='ask_home').click().run()
         self.assertNoExceptions();self.assertEqual(call.call_args.args[0],'Groq')
         self.assertEqual(self.app.session_state['home_messages'][-1]['content'],'Cloud works')
-    def test_both_settings_and_both_answers(self):
-        self.page('Settings');self.app.toggle(key='setting_cloud_enabled').set_value(True).run()
+    def test_selected_cloud_provider_answers(self):
+        self.page('Settings')
         self.app.selectbox(key='setting_provider').set_value('Groq').run()
         self.app.text_input(key='setting_groq_key').set_value('test-Groq');self.app.button(key='save_settings').click().run()
-        self.assertEqual(ai.enabled_providers(self.app.session_state['settings']),['Ollama','Groq'])
+        self.assertEqual(ai.enabled_providers(self.app.session_state['settings']),['Groq'])
         self.page('Home');revision=self.app.session_state['home_question_rev'];self.app.text_area(key=f'home_question_{revision}').set_value('Hello')
         with patch.object(ai,'_generate_one',side_effect=lambda name,*a:name+' response'):self.app.button(key='ask_home').click().run()
-        answer=self.app.session_state['home_messages'][-1]['content'];self.assertIn('Ollama response',answer);self.assertIn('Groq response',answer);self.assertNoExceptions()
+        answer=self.app.session_state['home_messages'][-1]['content'];self.assertEqual(answer,'Groq response');self.assertNoExceptions()
     def test_invalid_settings_do_not_replace_active_mode(self):
-        self.page('Settings');self.app.toggle(key='setting_ollama_enabled').set_value(False).run();self.app.button(key='save_settings').click().run()
-        self.assertTrue(self.app.error);self.assertEqual(ai.enabled_providers(self.app.session_state['settings']),['Ollama']);self.assertFalse(self.settings_path.exists())
+        self.page('Settings');self.app.button(key='save_settings').click().run()
+        self.assertTrue(self.app.error);self.assertEqual(ai.enabled_providers(self.app.session_state['settings']),['OpenAI']);self.assertFalse(self.settings_path.exists())
     def test_usage_write_error_does_not_break_chat(self):
         revision=self.app.session_state['home_question_rev'];self.app.text_area(key=f'home_question_{revision}').set_value('Hello')
         with patch('json_storage.atomic_write_json',side_effect=PermissionError('locked')),patch.object(ai,'_generate_one',return_value='Retained answer'):

@@ -51,45 +51,11 @@ in the console rather than raising an app exception.
 compiler, click Run / Compile, then send `1729`. The program uses repeated digit
 sum equal to 1 as the definition and prints `1729 is a magic number.`
 
-## Ollama, cloud API, or both
+## Cloud AI provider
 
-Open Settings. The two switches are independent:
+Select OpenAI, Gemini or Groq in Settings, enter the API key and model, then save and test the connection. The app sends prompts and retrieved context to the selected cloud provider. Store keys as environment secrets on hosted deployments. For local use, keys can come from Settings or a `.env` file copied from `.env.example`.
 
-| Local Ollama | Cloud AI APIs | Behavior after Save Settings |
-|---|---|---|
-| On | Off | One answer from your local Ollama model; no API key needed |
-| Off | On | One answer from the selected OpenAI, Gemini or Groq API; Ollama is not contacted |
-| On | On | Same request sent to both in parallel; answers shown separately with provider labels |
-| Off | Off | Saving is blocked with a clear configuration message |
-
-For local use, start Ollama, choose its server URL, and install the exact selected
-model, for example `ollama pull qwen2.5-coder:7b`. A reachable server with a
-different model tag is not treated as proof that the selected model is installed.
-
-For Gemini, this package includes `.env` and `.env.example` with
-`GEMINI_MODEL=gemini-3.8-flash`. Add your real `GEMINI_API_KEY` locally. If you
-already have a `.env`, edit only its `GEMINI_MODEL` line and retain your keys.
-Restart CodePilot after editing environment configuration, select Gemini in
-Settings, and test the connection to verify model access for your account.
-
-For cloud use, select a provider and enter a valid API key and a model your API
-account can access. Save Settings, then **Test Enabled Connections**. The test
-reports each enabled backend separately and makes a small cloud inference request.
-Configured status on ordinary pages is not proof of successful connectivity.
-
-With both switches on, a failed backend appears as unavailable while the other
-answer remains. If both fail, the app shows the error. No silent fallback to a
-provider you disabled is performed. Combined mode sends the same prompt/context
-to the selected cloud service and uses its API quota as well as local resources.
-It produces two answers rather than one fused answer. Code conversion's
-"use converted code" action selects the first returned code block; review it
-before using it when two providers answered.
-
-When **Remember API keys locally** is unchecked, the key remains usable throughout
-the current browser session but is omitted from saved settings. Re-enter it after
-a new session or provide it in `.env`. `.env` is loaded from this project's folder
-regardless of the directory from which the app is launched. Do not share real keys.
-Model names stay editable; availability and quota are controlled by your provider.
+When **Remember API keys locally** is unchecked, the key remains usable throughout the current browser session but is omitted from saved settings. Re-enter it after a new session or provide it in `.env`. `.env` is loaded from this project's folder regardless of the directory from which the app is launched. Do not share real keys. Model names stay editable; availability and quota are controlled by your provider.
 
 ## Other repairs
 
@@ -118,7 +84,7 @@ The bundled report records the tested environment and exact result. It covers
 real Streamlit workflows, live Python/C/C++/Node input, provider request fixtures,
 combined-provider concurrency/failures, settings persistence, usage locks and
 runner cleanup. Java command preparation is tested; native Java execution requires
-an installed JDK. Windows process behavior and live paid API/Ollama inference have
+an installed JDK. Windows process behavior and live paid API inference have
 not been tested on your computer. Use Test Enabled Connections for your credentials,
 models and network. No project can be guaranteed free of all possible bugs.
 
@@ -131,4 +97,3 @@ Provider references used for API compatibility checks:
 - https://developers.openai.com/api/reference/resources/chat
 - https://ai.google.dev/api/generate-content
 - https://console.groq.com/docs/api-reference
-- https://docs.ollama.com/api/tags

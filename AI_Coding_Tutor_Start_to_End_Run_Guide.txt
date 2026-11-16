@@ -10,11 +10,8 @@ Fresh installation:
 5. .venv\Scripts\python.exe -m streamlit run backend\app.py
 6. Open the address printed in the terminal and create/sign into a local account.
 
-Settings: independently enable Local Ollama and Cloud AI APIs.
-Ollama only: install/start Ollama and pull your selected model.
-Cloud only: choose OpenAI, Gemini or Groq and enter a valid API key/model.
-Both: each provider answers the same question in parallel, in separate sections.
-Save Settings, then Test Enabled Connections. Each provider is tested separately.
+Settings: choose OpenAI, Gemini or Groq and enter its valid API key/model.
+Save Settings, then Test Enabled Connections.
 Keys not remembered on disk remain usable during the current browser session.
 
 Compiler: choose a language, paste code, click Run / Compile. Enter values in the

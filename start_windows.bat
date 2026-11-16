@@ -17,7 +17,7 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-echo Use Settings to enable Ollama, Cloud AI APIs, or both.
+echo Use Settings to select a cloud AI provider and enter its API key.
 echo.
 echo Starting CodePilot AI...
 python -m streamlit run backend\app.py

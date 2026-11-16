@@ -23,7 +23,6 @@ except Exception:  # graceful fallback if requirements were not installed yet
 from ai_provider import (
     active_model,
     active_provider,
-    list_ollama_models,
     load_settings,
     provider_status,
     connection_results,
@@ -533,7 +532,7 @@ def page_header(title: str, subtitle: str, icon: str = "⌘") -> None:
                 "**Local:** run `python -m streamlit run backend/app.py`.  \n"
                 "**LAN:** add `--server.address 0.0.0.0`.  \n"
                 "**Cloud:** deploy the repository to a Python/Streamlit host and set API keys as environment secrets. "
-                "Local Ollama only works when the deployed app can reach your Ollama server."
+                "Cloud API keys must be configured as environment secrets on the hosting platform."
             )
 
 
@@ -788,7 +787,7 @@ def render_top_home_controls() -> None:
         if c2.button("⚙ Settings", key="home_settings", use_container_width=True): go("Settings")
         if c3.button("ⓘ About", key="home_about", use_container_width=True): go("About")
     if st.session_state.show_deploy_help:
-        st.info("Deploy this Streamlit app locally or to a Python host. Cloud deployments should store API keys as environment secrets. Local Ollama must be reachable from the host.")
+        st.info("Deploy this Streamlit app locally or to a Python host. Store cloud API keys as environment secrets on the hosting platform.")
 
 
 def render_home_chat() -> None:
@@ -1252,23 +1251,8 @@ def render_settings() -> None:
     settings = active_settings()
 
     section_card_start()
-    st.markdown("### 🔗 Ollama host")
-    ollama_host = st.text_input("Ollama server URL", value=str(settings.get("ollama_host", "http://127.0.0.1:11434")), key="setting_ollama_host")
-    section_card_end()
-
-    section_card_start()
-    st.markdown("### 🧊 Ollama model")
-    ollama_model = st.text_input("Local model", value=str(settings.get("ollama_model", "qwen2.5-coder:7b")), key="setting_ollama_model")
-    if st.button("List installed Ollama models", key="list_models"):
-        listed = list_ollama_models({**settings, "ollama_host": ollama_host}, timeout=3)
-        st.info(", ".join(listed) if listed else "No models found. Check the URL, start Ollama, and install a model.")
-    section_card_end()
-
-    section_card_start()
     use_rag = st.toggle("Use local RAG knowledge", value=bool(settings.get("use_rag", True)), key="setting_use_rag", help="Retrieve local programming notes; use ChromaDB when its optional vector dependencies are available.")
-    ollama_enabled = st.toggle("Local Ollama", value=bool(settings.get("ollama_enabled", not settings.get("cloud_enabled", False))), key="setting_ollama_enabled")
-    cloud_enabled = st.toggle("Cloud AI APIs", value=bool(settings.get("cloud_enabled", False)), key="setting_cloud_enabled")
-    st.caption("Ollama only: local answers. Cloud only: API answers. Both on: two separate answers from the same request. At least one must be on.")
+    st.caption("CodePilot uses the selected cloud API provider for AI answers.")
     section_card_end()
 
     cloud_provider = str(settings.get("cloud_provider", "OpenAI"))
@@ -1281,21 +1265,20 @@ def render_settings() -> None:
     openai_base = str(settings.get("openai_base_url", "https://api.openai.com/v1"))
     groq_base = str(settings.get("groq_base_url", "https://api.groq.com/openai/v1"))
 
-    if cloud_enabled:
-        section_card_start("cloud-settings")
-        cloud_provider = st.selectbox("Cloud provider", ["OpenAI", "Gemini", "Groq"], index=["OpenAI", "Gemini", "Groq"].index(cloud_provider if cloud_provider in ["OpenAI", "Gemini", "Groq"] else "OpenAI"), key="setting_provider")
-        if cloud_provider == "OpenAI":
-            openai_key = st.text_input("OpenAI / ChatGPT API key", value=openai_key, type="password", key="setting_openai_key")
-            openai_model = st.text_input("OpenAI model", value=openai_model, key="setting_openai_model")
-            openai_base = st.text_input("OpenAI API base URL", value=openai_base, key="setting_openai_base")
-        elif cloud_provider == "Gemini":
-            gemini_key = st.text_input("Google Gemini API key", value=gemini_key, type="password", key="setting_gemini_key")
-            gemini_model = st.text_input("Gemini model", value=gemini_model, key="setting_gemini_model")
-        else:
-            groq_key = st.text_input("Groq API key", value=groq_key, type="password", key="setting_groq_key")
-            groq_model = st.text_input("Groq model", value=groq_model, key="setting_groq_model")
-            groq_base = st.text_input("Groq API base URL", value=groq_base, key="setting_groq_base")
-        section_card_end()
+    section_card_start("cloud-settings")
+    cloud_provider = st.selectbox("Cloud provider", ["OpenAI", "Gemini", "Groq"], index=["OpenAI", "Gemini", "Groq"].index(cloud_provider if cloud_provider in ["OpenAI", "Gemini", "Groq"] else "OpenAI"), key="setting_provider")
+    if cloud_provider == "OpenAI":
+        openai_key = st.text_input("OpenAI / ChatGPT API key", value=openai_key, type="password", key="setting_openai_key")
+        openai_model = st.text_input("OpenAI model", value=openai_model, key="setting_openai_model")
+        openai_base = st.text_input("OpenAI API base URL", value=openai_base, key="setting_openai_base")
+    elif cloud_provider == "Gemini":
+        gemini_key = st.text_input("Google Gemini API key", value=gemini_key, type="password", key="setting_gemini_key")
+        gemini_model = st.text_input("Gemini model", value=gemini_model, key="setting_gemini_model")
+    else:
+        groq_key = st.text_input("Groq API key", value=groq_key, type="password", key="setting_groq_key")
+        groq_model = st.text_input("Groq model", value=groq_model, key="setting_groq_model")
+        groq_base = st.text_input("Groq API base URL", value=groq_base, key="setting_groq_base")
+    section_card_end()
 
     section_card_start()
     remember = st.checkbox("Remember API keys locally in data/settings.json", value=bool(settings.get("remember_api_keys", True)), key="setting_remember_keys")
@@ -1304,11 +1287,7 @@ def render_settings() -> None:
 
     candidate = dict(settings)
     candidate.update({
-        "ollama_host": ollama_host.strip().rstrip("/"),
-        "ollama_model": ollama_model.strip(),
         "use_rag": use_rag,
-        "cloud_enabled": cloud_enabled,
-        "ollama_enabled": ollama_enabled,
         "cloud_provider": cloud_provider,
         "remember_api_keys": remember,
         "openai_api_key": openai_key.strip(),
@@ -1361,7 +1340,7 @@ def render_about() -> None:
     st.markdown(
         """
         ### 🤖 Overview
-        CodePilot AI is a personal coding mentor that can run through a **local Ollama model** or a selected **cloud AI provider**. It combines AI guidance, local Retrieval-Augmented Generation (RAG), code execution, debugging, explanations, refactoring and code conversion in one workspace.
+        CodePilot AI is a personal coding mentor that can run through a selected **cloud AI provider**. It combines AI guidance, local Retrieval-Augmented Generation (RAG), code execution, debugging, explanations, refactoring and code conversion in one workspace.
         """
     )
     section_card_end()
@@ -1369,12 +1348,12 @@ def render_about() -> None:
     with a:
         section_card_start()
         st.markdown("### 🧱 Tech Stack")
-        st.markdown("`Streamlit` · `Python` · `ChromaDB` · `Ollama` · `OpenAI` · `Gemini` · `Groq`")
+        st.markdown("`Streamlit` · `Python` · `ChromaDB` · `OpenAI` · `Gemini` · `Groq`")
         section_card_end()
     with b:
         section_card_start("privacy-card")
         st.markdown("### 🛡️ Privacy Model")
-        st.markdown("- Local Ollama prompts remain on your machine.\n- RAG knowledge is stored locally in ChromaDB.\n- Cloud prompts are sent only when Cloud AI APIs are enabled.\n- API keys can be provided through environment variables or saved locally by choice.")
+        st.markdown("- Prompts and retrieved context are sent to the selected cloud AI provider.\n- RAG knowledge is stored locally in ChromaDB.\n- API keys can be provided through environment variables or saved locally by choice.")
         section_card_end()
     section_card_start()
     st.markdown("### 🗄️ RAG (Retrieval-Augmented Generation)")
@@ -1410,4 +1389,4 @@ if st.session_state.get("_last_page") != st.session_state.page:
 
 PAGES.get(st.session_state.page, render_home)()
 track_active_time()
-st.markdown("<div class='app-footer'>CodePilot AI · Ollama / Cloud AI · Local RAG · ChromaDB · Streamlit</div>", unsafe_allow_html=True)
+st.markdown("<div class='app-footer'>CodePilot AI · Cloud AI · Local RAG · ChromaDB · Streamlit</div>", unsafe_allow_html=True)

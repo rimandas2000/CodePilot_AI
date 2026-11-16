@@ -12,11 +12,11 @@ runtime limits, cleanup and current-interpreter behavior.
 Real Streamlit AppTest exercised navigation, console form input, registration,
 login, sign-out, corrupt stores, permissions, errors surviving reruns, and provider
 settings. Provider tests used local HTTP fixtures and mocked Gemini responses;
-no live paid API or local Ollama model inference was performed. Both-provider
+no live paid API inference was performed.
 concurrency and partial failure preservation passed. All Python sources compile.
 
 Not verified: native Windows process/UI behavior, your actual API credentials,
-quota/model availability, Ollama model readiness, or optional ChromaDB embeddings.
+quota/model availability, or optional ChromaDB embeddings.
 Use Test Enabled Connections on your computer. This is a personal workspace,
 not a secure public code sandbox or transactional multi-user accounting system.
 No claim is made that every possible bug has been eliminated.
