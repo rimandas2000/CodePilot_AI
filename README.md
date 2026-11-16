@@ -1,23 +1,12 @@
 # CodePilot AI — Interactive Coding Workspace
 
-A Streamlit coding mentor with OpenAI/Gemini/Groq cloud APIs,
-local knowledge retrieval, and an interactive code console.
+CodePilot AI is a Streamlit coding mentor with **cloud API providers only**: OpenAI, Gemini, or Groq. It also includes local programming notes (RAG), an interactive code console, debugging, explanations, code improvement, and code conversion.
 
-## What's updated
+## Run locally on Windows
 
-- Removed the Generate Tests section.
-- Added automatic detection of recognizable C, C++, Python, Java and JavaScript code in Compiler, Debug & Fix, Explain Code, Improve Code and Convert Code.
-- In Convert Code, pasting source automatically updates the source-language dropdown; choose the desired target separately.
-- If a snippet is too short or ambiguous to identify reliably, select its language manually.
-- Uploaded source files use their extension to help identify their language.
-- Language choices are retained when navigating between Compiler, Debug, Explain, Improve and Convert: the application stores the preference separately from Streamlit widget state and uses recognizable editor code when re-entering a page.
-
-**Existing installation:** follow `UPGRADE_WINDOWS.md` to update the backend and
-packages while keeping your account, settings, API keys and progress.
-
-## Start a fresh installation
-
-Install Python 3.11 or 3.12, then in this project's folder:
+1. Install Python 3.11 or 3.12.
+2. Open a terminal in the `CodePilot_AI` project folder.
+3. Create an environment, install dependencies, and launch the app:
 
 ```bat
 python -m venv .venv
@@ -25,56 +14,54 @@ python -m venv .venv
 .venv\Scripts\python.exe -m streamlit run backend\app.py
 ```
 
-Open the address printed by Streamlit, normally http://localhost:8501.
-You can also use `start_windows.bat`. Create an account or sign into your existing
-local account. Set up your AI providers in Settings.
+4. Open the local address Streamlit prints, usually `http://localhost:8501`.
+5. Create an account or sign in. Open **Settings**, choose OpenAI, Gemini, or Groq, enter the provider's API key and model, then select **Save Settings** and **Test Enabled Connections**.
 
-## AI modes
+You can also launch the app with `start_windows.bat`.
 
-- Select OpenAI, Gemini or Groq in Settings and enter its API key. All AI answers use the selected cloud provider.
+## API key setup
 
-Enter the correct model, URL and API key, then Save Settings and Test Enabled
-Connections. Cloud calls need an accessible API account, available model and quota.
-If you choose not to remember API keys, they stay available only in the current
-session or can be supplied through `.env` copied from `.env.example`.
+Choose one cloud provider in **Settings**. The key must be valid for that provider and the selected model must be available to your account. CodePilot sends prompts and retrieved context to the selected cloud provider.
 
-## Compiler
+For local runs, you can enter the key in Settings or put it in a local `.env` file copied from `.env.example`. Set the matching `OPENAI_API_KEY`, `GEMINI_API_KEY`, or `GROQ_API_KEY` variable. Never commit a real `.env` file or API key to GitHub. On the hosted app, configure the key in CodePilot's Settings after signing in.
 
-Choose Python, C, C++, Java or JavaScript. Run / Compile starts a program; the
-Live Console accepts input while it runs. Send each requested value, use End Input
-for EOF, and Stop to end a run. No separate stdin or timeout section is shown.
-Requires GCC/G++ for C/C++, a full JDK for Java, or Node.js for JavaScript. Python
-uses CodePilot's own interpreter. The console supports line input, not raw TTY or
-GUI interactions. Runs have internal duration/output limits.
+## Deploy on Streamlit Community Cloud
 
-## Other pages
+1. Push the project files to a GitHub repository. Keep `requirements.txt` at the repository root.
+2. Open [Streamlit Community Cloud](https://share.streamlit.io/) and choose **Create app** → **Deploy from repo**.
+3. Select your GitHub repository and branch. Set **Main file path** to `backend/app.py`.
+4. Select **Deploy**. Streamlit installs `requirements.txt` and starts CodePilot.
+5. Open the app URL, create an account or sign in, and configure the cloud provider in **Settings** as described above.
 
-Home, AI Mentor Chat, Debug & Fix, Explain Code, Improve Code, Generate Tests,
-Convert Code, Dashboard, Recent Activity, Settings and About. Editors use Ace
-when available and fall back to native Streamlit text areas.
+The current CodePilot deployment uses `rimandas2000/CodePilot_AI`, branch `main`, and `backend/app.py`.
+
+## Use CodePilot
+
+- **Home / AI Mentor Chat:** ask a coding question or request help with a concept.
+- **Compiler / Run Code:** choose Python, C, C++, Java, or JavaScript, enter code, and run it. The Live Console accepts program input; use **End Input** for EOF or **Stop** to end a run.
+- **Debug & Fix, Explain Code, Improve Code, Convert Code:** paste or upload code and follow the page prompts. If language detection is uncertain, choose the language manually.
+- **Settings:** choose the cloud provider, manage the API key and model, test the connection, and turn local RAG knowledge on or off.
+- **Dashboard, Recent Activity, About:** review usage and app information.
+
+C and C++ require GCC/G++, Java requires a JDK, and JavaScript requires Node.js on the host running the app. Python uses the app's Python environment. Code execution has runtime and output limits and should be used only with trusted code.
 
 ## Optional vector RAG
 
-Without ChromaDB, RAG uses keyword-matched local notes from `backend/knowledge`.
-To enable ChromaDB embeddings and rebuild its index:
+Local keyword-based retrieval works without extra packages. To enable ChromaDB embeddings and rebuild the index:
 
 ```bat
-python -m pip install -r requirements-rag.txt
-python backend/ingest.py
+.venv\Scripts\python.exe -m pip install -r requirements-rag.txt
+.venv\Scripts\python.exe backend\ingest.py
 ```
 
-The embedding model may require a first-time internet download.
+The embedding model may need an internet connection for its first download.
 
-## Tests and operating limits
+## Tests and operating notes
+
+Run the included checks with:
 
 ```bat
-python -m unittest discover -s tests -v
+.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-See `VALIDATION_REPORT.txt` and `UPGRADE_WINDOWS.md` for tested cases and remaining
-limits. Usage writes cannot stop chat when statistics cannot be saved. Use a single
-server for this personal JSON-backed workspace. Local code execution is trusted
-code execution with your user's permissions, not a public multi-user sandbox.
-Cloud prompts and retrieved context are sent to the enabled cloud provider. Saved
-keys are plain local configuration when remembering keys is enabled. New passwords
-are stored as salted PBKDF2 hashes; no verified email password recovery is provided.
+See `VALIDATION_REPORT.txt` and `UPGRADE_WINDOWS.md` for tested cases and known limits. Accounts, usage, and settings use local JSON files in the app environment; use one server for this personal workspace. Passwords are stored as salted PBKDF2 hashes. Verified email password recovery is not provided.
