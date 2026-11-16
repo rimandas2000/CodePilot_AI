@@ -1,0 +1,30 @@
+CODEPILOT AI — WINDOWS RUN GUIDE
+
+For an existing installation, use UPGRADE_WINDOWS.md before replacing files.
+
+Fresh installation:
+1. Install Python 3.11/3.12.
+2. Open the CodePilot_AI folder in a terminal.
+3. python -m venv .venv
+4. .venv\Scripts\python.exe -m pip install -r requirements.txt
+5. .venv\Scripts\python.exe -m streamlit run backend\app.py
+6. Open the address printed in the terminal and create/sign into a local account.
+
+Settings: independently enable Local Ollama and Cloud AI APIs.
+Ollama only: install/start Ollama and pull your selected model.
+Cloud only: choose OpenAI, Gemini or Groq and enter a valid API key/model.
+Both: each provider answers the same question in parallel, in separate sections.
+Save Settings, then Test Enabled Connections. Each provider is tested separately.
+Keys not remembered on disk remain usable during the current browser session.
+
+Compiler: choose a language, paste code, click Run / Compile. Enter values in the
+Live Console as the program asks for them. Use End Input (EOF) when done and Stop
+to terminate a run. Python uses the current environment. C/C++ need GCC/G++, Java
+needs a full JDK, and JavaScript needs Node.js, all available on PATH.
+
+Local notes RAG works without extra packages. Optional vector RAG:
+python -m pip install -r requirements-rag.txt
+python backend/ingest.py
+
+Use only trusted local code. See UPGRADE_WINDOWS.md for exact update instructions,
+provider setup, operating limits, fixes and validation details.
