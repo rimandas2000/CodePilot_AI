@@ -1,0 +1,76 @@
+CodePilot AI — Interactive Console Upgrade Validation
+
+Environment: Linux, Python 3.12.14, Streamlit 1.65.0, streamlit-ace 0.1.1
+Command: python -m unittest discover -s tests -v
+Result: 52 tests discovered; 51 passed; 1 skipped. No failures/errors.
+
+The skipped test is actual Java interactive execution because javac is absent.
+Java filename/constructor/package command preparation passed. Native Python, C,
+C++ and Node.js prompts and inputs were exercised, plus Stop, EOF, output limits,
+runtime limits, cleanup and current-interpreter behavior.
+
+Real Streamlit AppTest exercised navigation, console form input, registration,
+login, sign-out, corrupt stores, permissions, errors surviving reruns, and provider
+settings. Provider tests used local HTTP fixtures and mocked Gemini responses;
+no live paid API or local Ollama model inference was performed. Both-provider
+concurrency and partial failure preservation passed. All Python sources compile.
+
+Not verified: native Windows process/UI behavior, your actual API credentials,
+quota/model availability, Ollama model readiness, or optional ChromaDB embeddings.
+Use Test Enabled Connections on your computer. This is a personal workspace,
+not a secure public code sandbox or transactional multi-user accounting system.
+No claim is made that every possible bug has been eliminated.
+
+Test cases (full result above):
+test_all_navigation_pages (test_app_workflows.AppTests.test_all_navigation_pages) ... 2026-10-05 16:38:28.004 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_both_settings_and_both_answers (test_app_workflows.AppTests.test_both_settings_and_both_answers) ... 2026-10-05 16:38:29.479 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_console_input_and_removed_sections (test_app_workflows.AppTests.test_console_input_and_removed_sections) ... 2026-10-05 16:38:30.193 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_corrupt_accounts_cannot_be_overwritten (test_app_workflows.AppTests.test_corrupt_accounts_cannot_be_overwritten) ... 2026-10-05 16:38:31.023 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_create_account_and_sign_in (test_app_workflows.AppTests.test_create_account_and_sign_in) ... 2026-10-05 16:38:31.549 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_invalid_settings_do_not_replace_active_mode (test_app_workflows.AppTests.test_invalid_settings_do_not_replace_active_mode) ... 2026-10-05 16:38:32.193 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_malformed_usage_file_still_opens_dashboard (test_app_workflows.AppTests.test_malformed_usage_file_still_opens_dashboard) ... 2026-10-05 16:38:32.683 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_provider_error_remains_visible_after_rerun (test_app_workflows.AppTests.test_provider_error_remains_visible_after_rerun) ... 2026-10-05 16:38:33.066 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_session_only_cloud_key_survives_save_and_request (test_app_workflows.AppTests.test_session_only_cloud_key_survives_save_and_request) ... 2026-10-05 16:38:33.519 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_settings_save_permission_failure_is_visible (test_app_workflows.AppTests.test_settings_save_permission_failure_is_visible) ... 2026-10-05 16:38:34.358 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_sign_out_clears_previous_session_data (test_app_workflows.AppTests.test_sign_out_clears_previous_session_data) ... 2026-10-05 16:38:34.868 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_usage_write_error_does_not_break_chat (test_app_workflows.AppTests.test_usage_write_error_does_not_break_chat) ... 2026-10-05 16:38:35.242 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_c_live_prompt (test_interactive_executor.ConsoleTests.test_c_live_prompt) ... ok
+test_cpp_live_prompt (test_interactive_executor.ConsoleTests.test_cpp_live_prompt) ... ok
+test_current_python (test_interactive_executor.ConsoleTests.test_current_python) ... ok
+test_eof (test_interactive_executor.ConsoleTests.test_eof) ... ok
+test_invalid_source (test_interactive_executor.ConsoleTests.test_invalid_source) ... ok
+test_java_constructor_package_preserved (test_interactive_executor.ConsoleTests.test_java_constructor_package_preserved) ... ok
+test_java_live_input (test_interactive_executor.ConsoleTests.test_java_live_input) ... skipped 'JDK missing'
+test_javascript_live_input (test_interactive_executor.ConsoleTests.test_javascript_live_input) ... ok
+test_missing_runtime_and_empty_code (test_interactive_executor.ConsoleTests.test_missing_runtime_and_empty_code) ... ok
+test_output_limit (test_interactive_executor.ConsoleTests.test_output_limit) ... ok
+test_python_live_multiple_inputs (test_interactive_executor.ConsoleTests.test_python_live_multiple_inputs) ... ok
+test_runtime_limit (test_interactive_executor.ConsoleTests.test_runtime_limit) ... ok
+test_stop_cleanup (test_interactive_executor.ConsoleTests.test_stop_cleanup) ... ok
+test_all_failed_and_disabled (test_providers.ProviderTests.test_all_failed_and_disabled) ... ok
+test_both_http (test_providers.ProviderTests.test_both_http) ... ok
+test_cloud_failure_retains_local (test_providers.ProviderTests.test_cloud_failure_retains_local) ... ok
+test_cloud_only (test_providers.ProviderTests.test_cloud_only) ... ok
+test_connection_results_exact_tag (test_providers.ProviderTests.test_connection_results_exact_tag) ... ok
+test_gemini_header_and_model_prefix (test_providers.ProviderTests.test_gemini_header_and_model_prefix) ... ok
+test_invalid_configuration_and_null_response (test_providers.ProviderTests.test_invalid_configuration_and_null_response) ... ok
+test_key_redacted (test_providers.ProviderTests.test_key_redacted) ... ok
+test_legacy_mode (test_providers.ProviderTests.test_legacy_mode) ... ok
+test_local_failure_retains_cloud (test_providers.ProviderTests.test_local_failure_retains_cloud) ... ok
+test_local_only_no_key (test_providers.ProviderTests.test_local_only_no_key) ... ok
+test_malformed_json (test_providers.ProviderTests.test_malformed_json) ... ok
+test_no_network_on_status_reruns (test_providers.ProviderTests.test_no_network_on_status_reruns) ... ok
+test_no_secret_persistence (test_providers.ProviderTests.test_no_secret_persistence) ... ok
+test_openai_payload (test_providers.ProviderTests.test_openai_payload) ... ok
+test_parallel (test_providers.ProviderTests.test_parallel) ... ok
+test_ai_answer_survives_usage_permission_error (test_usage_storage.StorageTests.test_ai_answer_survives_usage_permission_error) ... ok
+test_concurrent_processes_use_distinct_temp_files (test_usage_storage.StorageTests.test_concurrent_processes_use_distinct_temp_files) ... 2026-10-05 16:38:37.840 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+test_concurrent_threads_leave_complete_json (test_usage_storage.StorageTests.test_concurrent_threads_leave_complete_json) ... ok
+test_heartbeat_survives_permission_error_and_warns_once (test_usage_storage.StorageTests.test_heartbeat_survives_permission_error_and_warns_once) ... ok
+test_legacy_temp_path_is_never_used (test_usage_storage.StorageTests.test_legacy_temp_path_is_never_used) ... ok
+test_magic_number_accepts_standard_input (test_usage_storage.StorageTests.test_magic_number_accepts_standard_input) ... ok
+test_next_update_saves_retained_usage_after_recovery (test_usage_storage.StorageTests.test_next_update_saves_retained_usage_after_recovery) ... ok
+test_other_disk_error_preserves_existing_data (test_usage_storage.StorageTests.test_other_disk_error_preserves_existing_data) ... ok
+test_persistent_replace_lock_preserves_existing_data (test_usage_storage.StorageTests.test_persistent_replace_lock_preserves_existing_data) ... ok
+test_temp_creation_denied_retries_without_damaging_usage (test_usage_storage.StorageTests.test_temp_creation_denied_retries_without_damaging_usage) ... ok
+test_transient_replace_lock_recovers (test_usage_storage.StorageTests.test_transient_replace_lock_recovers) ... ok
