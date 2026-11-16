@@ -174,7 +174,7 @@ def render_signin() -> None:
               <div class="auth-brand-row"><div class="auth-logo">&lt;/&gt;</div>
                 <div><div class="auth-brand">CodePilot <span>AI</span></div><div class="auth-tagline">Your AI Coding Mentor</div></div>
               </div>
-              <div class="auth-pill">SMART &nbsp;•&nbsp; FAST &nbsp;•&nbsp; LOCAL + CLOUD</div>
+              <div class="auth-pill">SMART &nbsp;•&nbsp; FAST &nbsp;•&nbsp; CLOUD AI</div>
               <p class="auth-copy">CodePilot AI is a personal GenAI + RAG coding mentor designed to help you learn, understand, debug, optimize, generate and enhance code.</p>
               <div class="promo-feature"><b>⌘ &nbsp; Understand Your Code</b><span>Get clear explanations in simple language.</span></div>
               <div class="promo-feature green"><b>🐞 &nbsp; Debug &amp; Fix</b><span>Find and solve issues quickly.</span></div>
@@ -1390,3 +1390,4 @@ if st.session_state.get("_last_page") != st.session_state.page:
 PAGES.get(st.session_state.page, render_home)()
 track_active_time()
 st.markdown("<div class='app-footer'>CodePilot AI · Cloud AI · Local RAG · ChromaDB · Streamlit</div>", unsafe_allow_html=True)
+
